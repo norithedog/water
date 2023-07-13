@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Water Tracker Widget</title>
+    <style>
+      body {
+        font-family: "Futura", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .water-widget {
+        background-color: #f2f2f2;
+        border: 0px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px auto;
+        width: 70%;
+        padding-bottom: 30px;
+        padding-top: 5px;
+        position: relative;
+      }
+
+      .water-widget-header {
+        text-align: center;
+        margin-bottom: 10px;
+        
+      }
+
+      .water-widget-table {
+        margin-top: 10px;
+        display: table;
+        width: 100%;
+      }
+
+      .water-widget-row {
+        display: table-row;
+      }
+
+      .water-widget-cell {
+        display: table-cell;
+        text-align: center;
+        padding: 10px;
+        vertical-align: middle;
+      }
+
+      .water-widget-checkbox {
+        margin: 0;
+        width: 15px;
+        height: 15px;
+        transform: scale(1.5);
+        border: none;
+        background-color: white;
+      }
+
+      .water-widget-img {
+        width: 75px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .water-widget-img::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        z-index: 1;
+        animation: wipe-down 0.3s forwards ease-in-out;
+        transform-origin: top;
+      }
+
+      @keyframes wipe-down {
+        from {
+          transform: scaleY(0);
+        }
+        to {
+          transform: scaleY(1);
+        }
+      }
+
+      h2 {
+        font-family: "Futura", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: bold;
+      }
+
+      .water-widget-progress {
+        height: 20px;
+        background-color: #ddd;
+        border-radius: 10px;
+        margin-top: 10px;
+        position: relative;
+        width: 90%;
+        display: flex;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .water-widget-progress-bar {
+        height: 100%;
+        background-color: #b8c4d1;
+        border-radius: 10px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: width 0.3s ease-in-out;
+        width: 0%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .water-widget-progress-percentage {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: bold;
+      }
+
+.reset-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #000;
+  cursor: pointer;
+  font-family: "Futura", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+  border: none;
+}
+
+.reset-button:hover {
+  background-color: #59595c;
+  color: #fff;
+}
+    </style>
+  </head>
+  <body>
+    <div class="water-widget">
+      <div class="water-widget-header">
+        <h2>WATER TRACKER</h2>
+      </div>
+      <div class="water-widget-table">
+        <div class="water-widget-row">
+          <div class="water-widget-cell"><img src="https://i.imgur.com/dCFa1Iu.png" alt="Water Glass" class="water-widget-img" id="img-1"></div>
+          <div class="water-widget-cell"><img src="https://i.imgur.com/dCFa1Iu.png" alt="Water Glass" class="water-widget-img" id="img-2"></div>
+          <div class="water-widget-cell"><img src="https://i.imgur.com/dCFa1Iu.png" alt="Water Glass" class="water-widget-img" id="img-3"></div>
+          <div class="water-widget-cell"><img src="https://i.imgur.com/dCFa1Iu.png" alt="Water Glass" class="water-widget-img" id="img-4"></div>
+          <div class="water-widget-cell"><img src="https://i.imgur.com/dCFa1Iu.png" alt="Water Glass" class="water-widget-img" id="img-5"></div>
+        </div>
+        <div class="water-widget-row">
+          <div class="water-widget-cell"><input type="checkbox" class="water-widget-checkbox" id="checkbox-1" onclick="updateProgress()"></div>
+          <div class="water-widget-cell"><input type="checkbox" class="water-widget-checkbox" id="checkbox-2" onclick="updateProgress()"></div>
+          <div class="water-widget-cell"><input type="checkbox" class="water-widget-checkbox" id="checkbox-3" onclick="updateProgress()"></div>
+          <div class="water-widget-cell"><input type="checkbox" class="water-widget-checkbox" id="checkbox-4" onclick="updateProgress()"></div>
+          <div class="water-widget-cell"><input type="checkbox" class="water-widget-checkbox" id="checkbox-5" onclick="updateProgress()"></div>
+        </div>
+      </div>
+      <div class="water-widget-progress">
+        <div class="water-widget-progress-bar" id="progress-bar"></div>
+        <div class="water-widget-progress-percentage" id="progress-percentage">0%</div>
+      </div>
+      <button class="reset-button" onclick="resetCheckboxes()">Reset</button>
+    </div>
+    <script>
+      function updateProgress() {
+        const checkboxes = document.querySelectorAll('.water-widget-checkbox');
+        const progress = document.getElementById('progress-bar');
+        const percentage = document.getElementById('progress-percentage');
+        let checkedCount = 0;
+
+        checkboxes.forEach((checkbox, index) => {
+          const img = document.getElementById(`img-${index + 1}`);
+          if (checkbox.checked) {
+            img.src = 'https://i.imgur.com/jrKjQta.png';
+            checkedCount++;
+          } else {
+            img.src = 'https://i.imgur.com/dCFa1Iu.png';
+          }
+        });
+
+        const width = checkedCount * 20;
+        progress.style.width = `${width}%`;
+        percentage.innerText = `${width}%`;
+      }
+
+      function resetCheckboxes() {
+        const checkboxes = document.querySelectorAll('.water-widget-checkbox');
+
+        checkboxes.forEach((checkbox) => {
+          checkbox.checked = false;
+          const img = document.getElementById(`img-${checkbox.id.split('-')[1]}`);
+          img.src = 'https://i.imgur.com/dCFa1Iu.png';
+        });
+
+        const progress = document.getElementById('progress-bar');
+        const percentage = document.getElementById('progress-percentage');
+        progress.style.width = '0%';
+        percentage.innerText = '0%';
+      }
+    </script>
+  </body>
+</html>
